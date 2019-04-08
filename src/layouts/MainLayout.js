@@ -17,6 +17,7 @@ const MainLayout = () => {
       {/* 바디 - 검색 결과 화면 */}
       <BodyContainer>
         <Route path='/' component={Board} exact></Route>
+        <Route path='/search/' component={Board} exact></Route>
         <Route path='/search/:search' component={Board}></Route>
       </BodyContainer>
     </Container>

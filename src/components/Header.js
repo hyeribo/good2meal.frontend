@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { withRouter, matchPath } from 'react-router-dom';
 import { Row, Col, Input } from 'antd';
 import styled from 'styled-components';
@@ -8,33 +8,39 @@ const Search = Input.Search;
 const HeaderLayout = withRouter(({ location, history }) => {
   console.log('========== Header ==========')
 
-  // 검색 값
-  const [value, setValue] = useState('');
-
-  // value 초기화
-  useEffect(() => {
-    // uri params 구하기
+  // MEMO
+  // useEffect에서 state를 초기화하는것보다 (렌더링 2번됨)
+  // useState에 함수를 전달해서 초기화시킨다. (렌더링 1번됨)
+  const [value, setValue] = useState(() => {
     const { pathname } = location;
     const searchParams = matchPath(pathname, {
       path: `/search/:search`,
     })?.params?.search; // optional chaining
-        
-    setValue(searchParams);
+    return searchParams || '';
+  });
 
-  }, [true]); // shouldComponentUpdate
+
+  // const searchParams = useMemo(() => )
+  // useMemo(() => {
+  //   computeExpensiveValue(a, b)
+  // }, [a, b]);
 
 
   const handleSearch = (value) => {
-    console.log('search: ', value)
     history.push('/search/'+value);
   }
+  const goHome = () => {
+    setValue('')
+    history.push('/');
+  }
+  
 
   return (
     <Row style={{ textAlign: 'center' }}>
       <Col lg={3} xs={6}>
         <Logo
           src={require(`../assets/logo.png`)}
-          onClick={() => history.push('/')}
+          onClick={() => goHome()}
         />
       </Col>
       <Col lg={18} xs={12}>
