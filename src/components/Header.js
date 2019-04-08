@@ -37,13 +37,19 @@ const HeaderLayout = withRouter(({ location, history }) => {
 
   return (
     <Row style={{ textAlign: 'center' }}>
-      <Col lg={3} xs={6}>
+      <Col lg={3} sm={6} xs={0}>
         <Logo
           src={require(`../assets/logo.png`)}
           onClick={() => goHome()}
         />
       </Col>
-      <Col lg={18} xs={12}>
+      <Col lg={0} sm={0} xs={3}>
+        <Icon
+          src={require(`../assets/favicon.png`)}
+          onClick={() => goHome()}
+        />
+      </Col>
+      <Col lg={18} xs={15}>
         <Search
           placeholder="input search text"
           onSearch={value => handleSearch(value)}
@@ -62,5 +68,8 @@ const HeaderLayout = withRouter(({ location, history }) => {
 const Logo = styled.img`
   width: 100%;
   padding: 10px 20px;
+`;
+const Icon = styled.img`
+  height: 20px;
 `;
 export default HeaderLayout;
