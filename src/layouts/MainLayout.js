@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import Header from '../components/Header';
 import Board from '../components/Board';
+import Detail from '../components/Detail';
 
 const MainLayout = () => {
   
@@ -19,6 +20,7 @@ const MainLayout = () => {
         <Route path='/' component={Board} exact></Route>
         <Route path='/search/' component={Board} exact></Route>
         <Route path='/search/:search' component={Board}></Route>
+        <Route path='/detail/:picId' component={Detail}></Route>
       </BodyContainer>
     </Container>
   )

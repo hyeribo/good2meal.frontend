@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Tag } from 'antd';
 import axios from 'axios';
@@ -34,32 +34,24 @@ const TagField = (props) => {
 
 const Board = withRouter(({ match }) => {
   const { search } = match.params;
-
+  
   useEffect(() => {
 
-    // const params = {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     'access-control-allow-origin': '*'
-    //   }
-    // }
-
-    // axios.get('http://192.168.133.84:3000/api/restaurant/양식?c=햄버거', {
-    //   // method: 'GET',
-    //   mode: 'no-cors',
-    //   withCredentials: false,
-    //   headers: {'X-Requested-With': 'XMLHttpRequest'},
-    //   // headers: {
-    //   //   'Access-Control-Allow-Origin': '*',
-    //   //   'Access-Control-Allow-HEADER': '*',
-    //   //   'Access-Control-Allow-Methods': 'GET',
-    //   //   'Content-Type': 'application/json',
-    //   // },
-    //   // withCredentials: true,
-    //   // credentials: 'same-origin',
-    // })
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error!!!', error));
+    
+    axios.get('https://dummyimage.com/300', {
+      mode: 'no-cors',
+      // withCredentials: false,
+      // headers: {
+        // 'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Origin': '*',
+        // 'Access-Control-Allow-HEADER': '*',
+        // 'Access-Control-Allow-Methods': 'GET',
+      // },
+      // withCredentials: true,
+      // credentials: 'same-origin',
+    })
+      .then(result => console.log('result', result))
+      .catch(error => console.log('error!!!', error));
 
   }, []);
 
@@ -74,7 +66,7 @@ const Board = withRouter(({ match }) => {
               array.map((a, i) => {
                 return (
                   <Col style={{ padding: '10px'}} key={i} lg={4} md={6} sm={8} xs={12}>
-                    <Box>{i}</Box>
+                    <Link to={`/detail/${i}`}><Box>{i}</Box></Link>
                   </Col>
                 )
               })
