@@ -8,7 +8,6 @@ const Search = Input.Search;
 const HeaderLayout = withRouter(({ location, history }) => {
   console.log('========== Header ==========')
 
-  // MEMO
   // useEffect에서 state를 초기화하는것보다 (렌더링 2번됨)
   // useState에 함수를 전달해서 초기화시킨다. (렌더링 1번됨)
   const [value, setValue] = useState(() => {
@@ -27,6 +26,7 @@ const HeaderLayout = withRouter(({ location, history }) => {
 
 
   const handleSearch = (value) => {
+    if(!value) return;
     history.push('/search/'+value);
   }
   const goHome = () => {
