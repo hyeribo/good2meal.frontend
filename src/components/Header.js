@@ -49,7 +49,7 @@ const HeaderLayout = withRouter(({ location, history }) => {
           onClick={() => goHome()}
         />
       </Col>
-      <Col lg={18} xs={15}>
+      <Col lg={18} sm={12} xs={15}>
         <Search
           placeholder="input search text"
           onSearch={value => handleSearch(value)}
@@ -58,7 +58,7 @@ const HeaderLayout = withRouter(({ location, history }) => {
           style={{ height: 40 }}
         />
       </Col>
-      <Col lg={3} xs={6}>
+      <Col lg={3} sm={6} xs={6}>
         유저정보
       </Col>
     </Row>
