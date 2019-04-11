@@ -2,8 +2,13 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Detail = withRouter(({ match, history }) => {
-  const { search } = match.params;
+const Detail = withRouter(({ match, history, location }) => {
+
+  const { picId } = match.params;
+
+  // TODO: 임시코드
+  const url = location.search ? location.search.split('url=')?.[1] : '';
+  const decodedUrl = decodeURIComponent(url);
 
   const handleGoBack = () => {
     history.goBack();
@@ -11,16 +16,20 @@ const Detail = withRouter(({ match, history }) => {
 
   return (
     <Container>
-      { search ? (<TagField/>) : null}
       <BackButton onClick={handleGoBack}> &lt; </BackButton>
-      {/* {match.params.picId} */}
+      <ImgContainer>
+        <Img src={decodedUrl} />
+      </ImgContainer>
     </Container>
   )
 });
 
 const Container = styled.div`
-  height: 200%;
+  height: 100%;
+  overflow-y: scroll;
   background-color: #eeeeee;
+  padding: 20px;
+  /* text-align: center; */
 `;
 const BackButton = styled.button`
   position: absolute;
@@ -33,6 +42,13 @@ const BackButton = styled.button`
   font-size: 20px;
   border: none;
   outline:none;
+`;
+const ImgContainer = styled.div`
+  text-align: center;
+`;
+const Img = styled.img`
+  width: 50%;
+  margin: auto;
 `;
 
 export default Detail;
