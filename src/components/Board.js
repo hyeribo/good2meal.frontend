@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Tag } from 'antd';
@@ -7,18 +7,10 @@ import Masonry from 'react-masonry-component';
 
 
 import RandomButton from './RandomButton';
-import dummy from '../../dummy.json';
-
 
 const masonryOptions = {
   transitionDuration: 0
 };
-const imagesLoadedOptions = {
-  background: '.my-bg-image-el',
-}
-
-
-console.log("dummy", dummy);
 
 const TagField = (props) => {
   const tags = ['this', 'is', 'test', 'tag'];
@@ -38,50 +30,49 @@ const TagField = (props) => {
 
 const Board = withRouter(({ match }) => {
   const { search } = match.params;
-  
-  // useEffect(() => {
-    
-  //   axios.get('https://dummyimage.com/300', {
-  //     mode: 'no-cors',
-  //     // withCredentials: false,
-  //     // headers: {
-  //       // 'Content-Type': 'application/json',
-  //       // 'Access-Control-Allow-Origin': '*',
-  //       // 'Access-Control-Allow-HEADER': '*',
-  //       // 'Access-Control-Allow-Methods': 'GET',
-  //     // },
-  //     // withCredentials: true,
-  //     // credentials: 'same-origin',
-  //   })
-  //     .then(result => console.log('result', result))
-  //     .catch(error => console.log('error!!!', error));
+  const [ cards, setCards ] = useState([]);
 
-  // }, []);
-
-  const imageArray = [];
-  dummy.result.forEach(image => {
-    image.recommendPlace.forEach(place => {
-      imageArray.push({
-        id: place.id,
-        name: place.name,
-        thumUrl: place.thumUrl,
-      })
-    })
-  });
-  console.log('imageArray', imageArray)
-
-  const images = imageArray.map((image, i) => {
-    return (
-      <Card key={i} lg={4} md={6} sm={8} xs={12}>
-        {
-          image.thumUrl
-          ? <Link to={`/detail/${image.id}`}><Thumb src={image.thumUrl} onError={(e)=> { return; }} /></Link>
-          : <Link to={`/detail/${image.id}`}><Thumb src={require('../assets/images/no_image.png')} /></Link>
-        }
+  useEffect(() => {
+    axios
+      .get("http://e7eb8e2e.ngrok.io/restaurants?location=구로디지털단지", { mode: 'no-cors', })
+      .then(response => {
+        const { result } = response.data;
         
-      </Card>
-    )
-  });
+        const images = [];
+        result.forEach(image => {
+          image.recommendPlace.forEach(place => {
+            images.push({
+              id: place.id,
+              name: place.name,
+              thumUrl: place.thumUrl,
+            })
+          })
+        });
+
+        console.log('images', images)
+
+        const imageItems = images.map((image, i) => {
+          return (
+            <Card key={i} lg={4} md={6} sm={8} xs={12}>
+              {
+                image.thumUrl
+                ? <Link to={`/detail/${image.id}?url=${encodeURIComponent(image.thumUrl)}`}><Thumb src={image.thumUrl} onError={(e)=> { return; }} /></Link>
+                : <Link to={`/detail/${image.id}`}><Thumb src={require('../assets/images/no_image.png')} /></Link>
+              }
+              
+            </Card>
+          )
+        });
+
+        setCards(imageItems);
+
+        console.log('items', imageItems)
+
+      }).catch(err => {
+        console.log('err!!', err);
+      });
+
+  }, []);
 
   return (
     <Container>
@@ -94,7 +85,7 @@ const Board = withRouter(({ match }) => {
             disableImagesLoaded={false} // default false
             updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
           >
-            {images}
+            {cards}
           </StyledMasonry>
         </Col>
         <Col xl={2} lg={1} md={1} sm={1} xs={0}></Col>
