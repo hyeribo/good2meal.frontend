@@ -1,14 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Detail = withRouter(({ match, history, location }) => {
+import imageModel from '@models/imageModel';
 
-  const { picId } = match.params;
 
-  // TODO: 임시코드
-  const url = location.search ? location.search.split('url=')?.[1] : '';
-  const decodedUrl = decodeURIComponent(url);
+const Detail = withRouter(({ match, history }) => {
+  const { id } = match.params;
+  const [ image, setImage ] = useState({
+    id: null,
+    recommendedPlace: [],
+    summary: {}
+  });
+
+  console.log('image', image);
+
+
+  useEffect(() => {
+    getImageDetail();
+  }, []);
+
+
+  const getImageDetail = async () => {
+    try {
+      const result = await imageModel.getImage(id, { location: '구로디지털단지' });
+      setImage(result.result);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleGoBack = () => {
     history.goBack();
@@ -18,8 +39,13 @@ const Detail = withRouter(({ match, history, location }) => {
     <Container>
       <BackButton onClick={handleGoBack}> &lt; </BackButton>
       <ImgContainer>
-        <Img src={decodedUrl} />
+        <Img src={image.summary.imageURL} />
       </ImgContainer>
+      <InfoContainer>
+        <Title>{image.summary.name}</Title>
+        <div>{image.summary.fullRoadAddress}</div>
+        <div>{image.summary.category}</div>
+      </InfoContainer>
     </Container>
   )
 });
@@ -46,8 +72,19 @@ const BackButton = styled.button`
 const ImgContainer = styled.div`
   text-align: center;
 `;
+const InfoContainer = styled.div`
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+`;
+const Title = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+`
+
 const Img = styled.img`
-  width: 50%;
+  /* width: 50%; */
+  height: 400px;
   margin: auto;
 `;
 

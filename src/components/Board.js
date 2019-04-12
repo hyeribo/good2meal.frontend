@@ -5,8 +5,9 @@ import { Row, Col, Tag } from 'antd';
 import axios from 'axios';
 import Masonry from 'react-masonry-component';
 
-
 import RandomButton from './RandomButton';
+
+import imageModel from '@models/imageModel';
 
 const masonryOptions = {
   transitionDuration: 0
@@ -30,49 +31,55 @@ const TagField = (props) => {
 
 const Board = withRouter(({ match }) => {
   const { search } = match.params;
-  const [ cards, setCards ] = useState([]);
+  const [ images, setImages ] = useState([]);
+  let lastEvaluatedKey = null;
 
   useEffect(() => {
-    axios
-      .get("http://e7eb8e2e.ngrok.io/restaurants?location=구로디지털단지", { mode: 'no-cors', })
-      .then(response => {
-        const { result } = response.data;
-        
-        const images = [];
-        result.forEach(image => {
-          image.recommendPlace.forEach(place => {
-            images.push({
-              id: place.id,
-              name: place.name,
-              thumUrl: place.thumUrl,
-            })
-          })
-        });
-
-        console.log('images', images)
-
-        const imageItems = images.map((image, i) => {
-          return (
-            <Card key={i} lg={4} md={6} sm={8} xs={12}>
-              {
-                image.thumUrl
-                ? <Link to={`/detail/${image.id}?url=${encodeURIComponent(image.thumUrl)}`}><Thumb src={image.thumUrl} onError={(e)=> { return; }} /></Link>
-                : <Link to={`/detail/${image.id}`}><Thumb src={require('../assets/images/no_image.png')} /></Link>
-              }
-              
-            </Card>
-          )
-        });
-
-        setCards(imageItems);
-
-        console.log('items', imageItems)
-
-      }).catch(err => {
-        console.log('err!!', err);
-      });
-
+    addImages();
   }, []);
+
+  const addImages = async (lastEvaluatedKey) => {
+    try {
+      // 이미지 리스트 request
+      const result = await imageModel.getImages({ location: '구로디지털단지' }, lastEvaluatedKey);
+      lastEvaluatedKey = result.lastEvaluatedKey.id;
+      // console.log('result', result);
+      // 데이터 가공해서 기존 리스트에 concat
+      const additionalImageItems = getImageItems(result.result);
+      setImages(images.concat(additionalImageItems)); 
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getImageItems = (images) => {
+    const imageItems = images.map(({summary}, i) => {
+      const size = `200x${getRandomHeight()}`;
+      if(summary.imageURL) summary.thumbnailURL = `https://search.pstatic.net/common/?src=${summary.imageURL}&type=f&size=${size}`;
+      return (
+        <Card key={summary.id} lg={4} md={6} sm={8} xs={12}>
+          {
+            summary.imageURL
+            ? <Link to={`/detail/${summary.id}`}><Thumb src={summary.thumbnailURL} onError={(e)=> { return; }} /></Link>
+            : null
+            // : <Link to={`/detail/${summary.id}`}><Thumb src={require('../assets/images/no_image.png')} /></Link>
+          }
+        </Card>
+      );
+    })
+    return imageItems;
+  }
+
+  const getRandomHeight = () => {
+    // 0 ~ 9
+    const randomDiff = Math.floor((Math.random() * 10));
+    // 120 ~ 320
+    const randomHeight = 320 + ( randomDiff % 2 ? randomDiff : randomDiff * -1 ) * 10;
+    return randomHeight;
+  }
+
+
 
   return (
     <Container>
@@ -85,7 +92,7 @@ const Board = withRouter(({ match }) => {
             disableImagesLoaded={false} // default false
             updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
           >
-            {cards}
+            {images}
           </StyledMasonry>
         </Col>
         <Col xl={2} lg={1} md={1} sm={1} xs={0}></Col>
