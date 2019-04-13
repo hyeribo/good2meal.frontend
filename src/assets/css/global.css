@@ -4,3 +4,11 @@ html, body {
   font-family: 'Apple SD Gothic Neo,Noto Sans KR,Malign Gothic,Sans-serif';
   color: #333;
 }
+
+.ant-tag {
+  height: 18px;
+  line-height: 18px;
+  padding: 0 2px;
+  font-size: 11px;
+  margin-left: 5px;
+}

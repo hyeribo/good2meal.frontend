@@ -1,16 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { Row, Col, Icon, Tag} from 'antd';
 
 import imageModel from '@models/imageModel';
+
+
+
+const Time = ({times}) => (
+  <Info>
+    <InfoIcon><Icon type="clock-circle" /></InfoIcon>
+    <InfoText>
+      {
+        times.map((time, i) => (
+          <div key={i}>
+            {time.type} {time.startTime} - {time.endTime} {time.description}
+          </div>
+        ))
+      }
+    </InfoText>
+  </Info>
+);
+const Menu = ({menus}) => (
+  <Info>
+    <InfoIcon><Icon type="profile" /></InfoIcon>
+    <InfoText>
+      {
+        menus.map((menu, i) => (
+          <div key={i}>
+            <span>{menu.name}</span>
+            { menu.isRecommended ? <Tag color="green">추천</Tag> : ''}
+            <Price>· · · {menu.price}</Price>
+          </div>
+        ))
+      }
+      <a onClick={() => console.log('이동')}>
+        메뉴판 사진 보기
+      </a>
+    </InfoText>
+  </Info>
+)
 
 
 const Detail = withRouter(({ match, history }) => {
   const { id } = match.params;
   const [ image, setImage ] = useState({
     id: null,
-    recommendedPlace: [],
-    summary: {}
+    recommendedPlace: [],   // 주변 장소
+    review: {},             // 리뷰
+    summary: {},            // 장소 설명
+    transit: {},            // 교통
   });
 
   console.log('image', image);
@@ -37,55 +76,138 @@ const Detail = withRouter(({ match, history }) => {
 
   return (
     <Container>
-      <BackButton onClick={handleGoBack}> &lt; </BackButton>
-      <ImgContainer>
-        <Img src={image.summary.imageURL} />
-      </ImgContainer>
-      <InfoContainer>
-        <Title>{image.summary.name}</Title>
-        <div>{image.summary.fullRoadAddress}</div>
-        <div>{image.summary.category}</div>
-      </InfoContainer>
+      <Row>
+        <Col xl={3} lg={2} md={1} sm={0} xs={0}>
+          <BackButton type="left" onClick={handleGoBack}/>
+        </Col>
+        <Col xl={18} lg={20} md={22} sm={24} xs={24}>
+          <Card>
+            <CardHeader>
+
+            </CardHeader>
+            <CardContent>
+              <Row>
+                <Col xl={13} lg={13} md={24} sm={24} xs={24}>
+                  <Img src={image.summary.imageURL} />  
+                </Col>
+                <Col xl={11} lg={11} md={24} sm={24} xs={24}>
+                  <InfoContainer>
+                    <InfoTitle>
+                      <span>{image.summary.name}</span>
+                      <span>{image.summary.category}</span>
+                    </InfoTitle>
+                    <h3>{image.summary.fullRoadAddress} ({image.summary.addressAbbr}) </h3>
+                    <InfoBox>
+                      {/* <Info><Icon type="phone" /> {image.summary.phone}</Info> */}
+                      {/* 연락처 */}
+                      <Info>
+                        <InfoIcon><Icon type="phone" /></InfoIcon>
+                        <InfoText>{image.summary.phone}</InfoText>
+                      </Info>
+                      {/* 영업 시간 */}
+                      {
+                        image.summary.bizHour?.length
+                        ? <Time times={image.summary.bizHour} /> : null
+                      }
+                      {/* 메뉴 */}
+                      {
+                        image.summary.menus?.length
+                        ? <Menu menus={image.summary.menus} /> : null
+                      }
+                      
+                    </InfoBox>
+                    {/* <Address>{image.summary.fullRoadAddress}</Address> */}
+                  </InfoContainer>
+                </Col>
+              </Row>
+            </CardContent>
+          </Card> 
+        </Col>
+        <Col xl={3} lg={2} md={1} sm={0} xs={0}></Col>
+      </Row>
     </Container>
   )
 });
 
+
 const Container = styled.div`
   height: 100%;
+  width: 100%;
   overflow-y: scroll;
   background-color: #eeeeee;
-  padding: 20px;
-  /* text-align: center; */
+  padding: 30px 20px;
 `;
-const BackButton = styled.button`
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  background-color: #eeeeee;
-  font-weight: bold;
+const BackButton = styled(Icon)`
   font-size: 20px;
-  border: none;
-  outline:none;
 `;
-const ImgContainer = styled.div`
-  text-align: center;
+const Card = styled.div`
+  width: 100%;
+  border-radius: 10px;
+  background-color: white;
 `;
+const CardHeader = styled.div`
+  width: 100%;
+  height: 60px;
+  padding: 16px;
+`;
+const CardContent = styled.div`
+  width: 100%;
+  height: calc(100% - 60px);
+  padding: 20px;
+  padding-top: 0px;
+`;
+// 식당 사진
+const Img = styled.img`
+  width: 100%;
+  border-radius: 8px;
+`;
+// 식당 정보
 const InfoContainer = styled.div`
   width: 100%;
-  text-align: center;
   padding: 20px;
 `;
-const Title = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-`
+// 상단 타이틀 (식당 이름, 카테고리)
+const InfoTitle = styled.div`
+  margin-bottom: 10px;
+  span:first-child {
+    font-size: 28px;
+    font-weight: bold;
+  }
+  span:last-child {
+    font-weight: bold;
+    color: #666666;
+    margin-left: 10px;
+  }
+`;
+// 하단 상세정보
+const InfoBox = styled.div`
+  border-bottom: 1px solid #dddddd;
+  padding: 16px 4px;
+`;
+const Info = styled.div`
+  margin-bottom: 8px;
+  i {
+    margin-right: 10px;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+const InfoIcon = styled.div`
+  width: 25px;
+  display: inline-block;
+  vertical-align: top;
+`;
+const InfoText = styled.div`
+  width: calc(100% - 25px);
+  display: inline-block;
+  div {
+    margin-top: 1px;
+  }
+`;
 
-const Img = styled.img`
-  /* width: 50%; */
-  height: 400px;
-  margin: auto;
+const Price = styled.div`
+  float: right;
 `;
 
 export default Detail;
