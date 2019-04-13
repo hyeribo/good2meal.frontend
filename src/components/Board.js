@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col, Tag } from 'antd';
-import axios from 'axios';
+import { Row, Col } from 'antd';
 import Masonry from 'react-masonry-component';
 
 import RandomButton from './RandomButton';
