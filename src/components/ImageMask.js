@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Icon } from 'antd';
 
+const ImageController = ({urls, index, setIndex}) => {
+  if(!urls?.length) return null;
+  const isFirst = index === 0;
+  const isLast = index === urls.length - 1;
+  const url = urls[index];
+  return (
+    <ImageContainer>
+      <Side>
+        { isFirst ? null : <Icon type="left" onClick={() => setIndex(index-1)} /> }
+      </Side>
+      <Center>
+        <img src={url} />
+      </Center>
+      <Side>
+      { isLast ? null : <Icon type="right" onClick={() => setIndex(index+1)} /> }
+      </Side>
+    </ImageContainer>
+  )
+}
+
 const ImageMask = (props) => {
+  const [ index, setIndex ] = useState(0);
+
   const Contents = (
     <Container>
       <CloseIcon type="close" onClick={props.onClose} />
-      { props.url ? <Img src={props.url} /> : null }
+      <ImageController urls={props.urls} index={index} setIndex={setIndex} />
     </Container>
   )
   const el = document.getElementById('modal');
@@ -25,6 +47,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: scroll;
 `;
 const CloseIcon = styled(Icon)`
   position: absolute;
@@ -33,8 +56,20 @@ const CloseIcon = styled(Icon)`
   font-size: 30px;
   color: white;
 `;
-const Img = styled.img`
-  width: 60%;
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  text-align: center;
+`;
+const Side = styled.div`
+  flex: 1;
+  margin: auto;
+  color: white;
+  font-size: 30px;
+`;
+const Center = styled.div`
+  flex: 3;
 `;
 
 export default ImageMask;

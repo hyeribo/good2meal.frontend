@@ -43,7 +43,7 @@ const Time = ({times}) => {
     </Info>
   );
 };
-const Menu = ({menus, menuImages, setImageMask }) => {
+const Menu = ({menus, menuImageExist, setImageMaskVisible }) => {
   if(!menus?.length) return null;
   return (
     <Info>
@@ -59,10 +59,8 @@ const Menu = ({menus, menuImages, setImageMask }) => {
           ))
         }
         {
-          menuImages?.[0].imageUrl
-          ? (<a onClick={() => setImageMask({ visible: true, url: menuImages?.[0].imageUrl })}>
-              메뉴판 사진 보기
-            </a>)
+          menuImageExist
+          ? <a onClick={() => setImageMaskVisible(true)}>메뉴판 사진 보기</a>
           : null
         }
       </InfoText>
@@ -77,13 +75,10 @@ const Detail = withRouter(({ match, history }) => {
     id: null,
     recommendedPlace: [],   // 주변 장소
     review: {},             // 리뷰
-    summary: { images: [] },            // 장소 설명
+    summary: { images: [], menuImageUrls: [] },            // 장소 설명
     transit: {},            // 교통
   });
-  const [ imageMask, setImageMask ] = useState({
-    visible: false,
-    url: '',
-  });
+  const [ imageMaskVisible, setImageMaskVisible ] = useState(false);
 
   console.log('restaurant', restaurant);
 
@@ -96,6 +91,8 @@ const Detail = withRouter(({ match, history }) => {
   const getImageDetail = async () => {
     try {
       const result = await imageModel.getImage(id, { location: '구로디지털단지' });
+      // 메뉴 이미지 url 배열 추가
+      result.result.summary.menuImageUrls = result.result.summary.menuImages?.map(img => img.imageUrl);
       setRestaurant(result.result);
 
     } catch (error) {
@@ -135,7 +132,11 @@ const Detail = withRouter(({ match, history }) => {
                     <InfoBox>
                       <Tel tel={restaurant.summary.phone} />
                       <Time times={restaurant.summary.bizHour} />
-                      <Menu menus={restaurant.summary.menus} menuImages={restaurant.summary.menuImages} setImageMask={setImageMask} />
+                      <Menu
+                        menus={restaurant.summary.menus}
+                        menuImageExist={(restaurant.summary.menuImageUrls.length > 0)}
+                        setImageMaskVisible={setImageMaskVisible}
+                      />
                     </InfoBox>
                   </InfoContainer>
                 </Col>
@@ -145,7 +146,7 @@ const Detail = withRouter(({ match, history }) => {
         </Col>
         <Col xl={3} lg={2} md={1} sm={0} xs={0}></Col>
       </Row>
-      <ImageMask visible={imageMask.visible} url={imageMask.url} onClose={() => setImageMask({visible: false, url: ''})} />
+      <ImageMask visible={imageMaskVisible} urls={restaurant.summary.menuImageUrls} onClose={() => setImageMaskVisible(false)} />
     </Container>
   )
 });
