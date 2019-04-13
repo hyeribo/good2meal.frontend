@@ -7,10 +7,10 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Layout } from 'antd';
-import styled from 'styled-components';
 
 import MainLayout from './layouts/MainLayout';
+
+import '@assets/css/global.css';
 
 const App = () => {
   return (
