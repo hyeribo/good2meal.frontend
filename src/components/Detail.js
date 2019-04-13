@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Row, Col, Icon, Tag, Carousel } from 'antd';
 
 import imageModel from '@models/imageModel';
+import ImageMask from '@components/ImageMask';
 
 
 const ImageCarousel = ({mainImageUrl, images}) => (
@@ -30,7 +31,7 @@ const Time = ({times}) => (
     </InfoText>
   </Info>
 );
-const Menu = ({menus}) => (
+const Menu = ({menus, menuImages, setImageMask }) => (
   <Info>
     <InfoIcon><Icon type="profile" /></InfoIcon>
     <InfoText>
@@ -43,7 +44,7 @@ const Menu = ({menus}) => (
           </div>
         ))
       }
-      <a onClick={() => console.log('이동')}>
+      <a onClick={() => setImageMask({ visible: true, url: menuImages?.[0].imageUrl })}>
         메뉴판 사진 보기
       </a>
     </InfoText>
@@ -59,6 +60,10 @@ const Detail = withRouter(({ match, history }) => {
     review: {},             // 리뷰
     summary: { images: [] },            // 장소 설명
     transit: {},            // 교통
+  });
+  const [ imageMask, setImageMask ] = useState({
+    visible: false,
+    url: '',
   });
 
   console.log('image', image);
@@ -122,7 +127,7 @@ const Detail = withRouter(({ match, history }) => {
                       {/* 메뉴 */}
                       {
                         image.summary.menus?.length
-                        ? <Menu menus={image.summary.menus} /> : null
+                        ? <Menu menus={image.summary.menus} menuImages={image.summary.menuImages} setImageMask={setImageMask} /> : null
                       }
                     </InfoBox>
                   </InfoContainer>
@@ -133,6 +138,7 @@ const Detail = withRouter(({ match, history }) => {
         </Col>
         <Col xl={3} lg={2} md={1} sm={0} xs={0}></Col>
       </Row>
+      <ImageMask visible={imageMask.visible} url={imageMask.url} onClose={() => setImageMask({visible: false, url: ''})} />
     </Container>
   )
 });
