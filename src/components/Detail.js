@@ -44,9 +44,13 @@ const Menu = ({menus, menuImages, setImageMask }) => (
           </div>
         ))
       }
-      <a onClick={() => setImageMask({ visible: true, url: menuImages?.[0].imageUrl })}>
-        메뉴판 사진 보기
-      </a>
+      {
+        menuImages?.[0].imageUrl
+        ? (<a onClick={() => setImageMask({ visible: true, url: menuImages?.[0].imageUrl })}>
+            메뉴판 사진 보기
+          </a>)
+        : null
+      }
     </InfoText>
   </Info>
 )
