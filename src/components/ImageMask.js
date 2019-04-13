@@ -38,13 +38,13 @@ const ImageMask = (props) => {
 }
 
 const Container = styled.div`
-  background: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  height: 100%;
-  width: 100%;
   display: flex;
+  background: rgba(0, 0, 0, 0.7);
   align-items: center;
   justify-content: center;
   overflow: scroll;
@@ -70,6 +70,10 @@ const Side = styled.div`
 `;
 const Center = styled.div`
   flex: 3;
+  margin: auto;
+  img {
+    width: 100%;
+  }
 `;
 
 export default ImageMask;
