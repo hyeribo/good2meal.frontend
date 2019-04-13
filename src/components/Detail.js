@@ -5,6 +5,7 @@ import { Row, Col, Icon, Tag, Carousel } from 'antd';
 
 import imageModel from '@models/imageModel';
 import ImageMask from '@components/ImageMask';
+import Button from '@components/Button';
 
 
 const ImageCarousel = ({mainImageUrl, images}) => (
@@ -67,10 +68,15 @@ const Menu = ({menus, menuImageExist, setImageMaskVisible }) => {
     </Info>
   );
 };
-
+const StarButton = ({starred, setStarred}) => {
+  return (
+    <Button size='large' onClick={() => setStarred(!starred)}><Icon type="star" theme={starred ? 'filled' : 'outlined'} /><span>관심식당</span></Button>
+  );
+};
 
 const Detail = withRouter(({ match, history }) => {
   const { id } = match.params;
+  const [ starred, setStarred ] = useState(false);
   const [ restaurant, setRestaurant ] = useState({
     id: null,
     recommendedPlace: [],   // 주변 장소
@@ -113,7 +119,7 @@ const Detail = withRouter(({ match, history }) => {
         <Col xl={18} lg={20} md={22} sm={24} xs={24}>
           <Card>
             <CardHeader>
-
+              <StarButton starred={starred} setStarred={setStarred} />
             </CardHeader>
             <CardContent>
               <Row>
@@ -169,12 +175,13 @@ const Card = styled.div`
 `;
 const CardHeader = styled.div`
   width: 100%;
-  height: 60px;
+  height: 68px;
   padding: 16px;
+  text-align: right;
 `;
 const CardContent = styled.div`
   width: 100%;
-  height: calc(100% - 60px);
+  height: calc(100% - 68px);
   padding: 20px;
   padding-top: 0px;
 `;
