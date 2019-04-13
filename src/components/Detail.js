@@ -177,13 +177,13 @@ const ImageContainer = styled.div`
   max-height: 400px;
   overflow: hidden;
   border-radius: 8px;
-  background: #364d79;
   text-align: center;
+  /* background: #364d79; */
 `;
 const Img = styled.img`
   height: 400px;
   width: auto !important;
-  /* border-radius: 8px; */
+  border-radius: 8px;
 `;
 // 식당 정보
 const InfoContainer = styled.div`

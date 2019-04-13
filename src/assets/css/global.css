@@ -23,4 +23,5 @@ html, body {
 .ant-carousel .slick-dots li button {
   height: 6px;
   border-radius: 3px;
+  background: #222;
 }
