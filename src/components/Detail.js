@@ -17,43 +17,58 @@ const ImageCarousel = ({mainImageUrl, images}) => (
     }
   </Carousel>
 )
-const Time = ({times}) => (
-  <Info>
-    <InfoIcon><Icon type="clock-circle" /></InfoIcon>
-    <InfoText>
-      {
-        times.map((time, i) => (
-          <div key={i}>
-            {time.type} {time.startTime} - {time.endTime} {time.description}
-          </div>
-        ))
-      }
-    </InfoText>
-  </Info>
-);
-const Menu = ({menus, menuImages, setImageMask }) => (
-  <Info>
-    <InfoIcon><Icon type="profile" /></InfoIcon>
-    <InfoText>
-      {
-        menus.map((menu, i) => (
-          <div key={i}>
-            <span>{menu.name}</span>
-            { menu.isRecommended ? <Tag color="green">추천</Tag> : ''}
-            <Price>· · · {menu.price}</Price>
-          </div>
-        ))
-      }
-      {
-        menuImages?.[0].imageUrl
-        ? (<a onClick={() => setImageMask({ visible: true, url: menuImages?.[0].imageUrl })}>
-            메뉴판 사진 보기
-          </a>)
-        : null
-      }
-    </InfoText>
-  </Info>
-)
+const Tel = ({tel}) => {
+  if(!tel) return null;
+  return (
+    <Info>
+      <InfoIcon><Icon type="phone" /></InfoIcon>
+      <InfoText>{tel}</InfoText>
+    </Info>
+  );
+}
+const Time = ({times}) => {
+  if(!times?.length) return null;
+  return (
+    <Info>
+      <InfoIcon><Icon type="clock-circle" /></InfoIcon>
+      <InfoText>
+        {
+          times.map((time, i) => (
+            <div key={i}>
+              {time.type} {time.startTime} - {time.endTime} {time.description}
+            </div>
+          ))
+        }
+      </InfoText>
+    </Info>
+  );
+};
+const Menu = ({menus, menuImages, setImageMask }) => {
+  if(!menus?.length) return null;
+  return (
+    <Info>
+      <InfoIcon><Icon type="profile" /></InfoIcon>
+      <InfoText>
+        {
+          menus.map((menu, i) => (
+            <div key={i}>
+              <span>{menu.name}</span>
+              { menu.isRecommended ? <Tag color="green">추천</Tag> : ''}
+              <Price>· · · {menu.price}</Price>
+            </div>
+          ))
+        }
+        {
+          menuImages?.[0].imageUrl
+          ? (<a onClick={() => setImageMask({ visible: true, url: menuImages?.[0].imageUrl })}>
+              메뉴판 사진 보기
+            </a>)
+          : null
+        }
+      </InfoText>
+    </Info>
+  );
+};
 
 
 const Detail = withRouter(({ match, history }) => {
@@ -118,21 +133,9 @@ const Detail = withRouter(({ match, history }) => {
                     </InfoTitle>
                     <h3>{image.summary.fullRoadAddress} ({image.summary.addressAbbr}) </h3>
                     <InfoBox>
-                      {/* 연락처 */}
-                      <Info>
-                        <InfoIcon><Icon type="phone" /></InfoIcon>
-                        <InfoText>{image.summary.phone}</InfoText>
-                      </Info>
-                      {/* 영업 시간 */}
-                      {
-                        image.summary.bizHour?.length
-                        ? <Time times={image.summary.bizHour} /> : null
-                      }
-                      {/* 메뉴 */}
-                      {
-                        image.summary.menus?.length
-                        ? <Menu menus={image.summary.menus} menuImages={image.summary.menuImages} setImageMask={setImageMask} /> : null
-                      }
+                      <Tel tel={image.summary.phone} />
+                      <Time times={image.summary.bizHour} />
+                      <Menu menus={image.summary.menus} menuImages={image.summary.menuImages} setImageMask={setImageMask} />
                     </InfoBox>
                   </InfoContainer>
                 </Col>
