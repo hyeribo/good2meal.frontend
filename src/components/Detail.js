@@ -73,7 +73,7 @@ const Menu = ({menus, menuImages, setImageMask }) => {
 
 const Detail = withRouter(({ match, history }) => {
   const { id } = match.params;
-  const [ image, setImage ] = useState({
+  const [ restaurant, setRestaurant ] = useState({
     id: null,
     recommendedPlace: [],   // 주변 장소
     review: {},             // 리뷰
@@ -85,7 +85,7 @@ const Detail = withRouter(({ match, history }) => {
     url: '',
   });
 
-  console.log('image', image);
+  console.log('restaurant', restaurant);
 
 
   useEffect(() => {
@@ -96,7 +96,7 @@ const Detail = withRouter(({ match, history }) => {
   const getImageDetail = async () => {
     try {
       const result = await imageModel.getImage(id, { location: '구로디지털단지' });
-      setImage(result.result);
+      setRestaurant(result.result);
 
     } catch (error) {
       console.log(error);
@@ -122,20 +122,20 @@ const Detail = withRouter(({ match, history }) => {
               <Row>
                 <Col xl={13} lg={13} md={24} sm={24} xs={24}>
                   <ImageContainer>
-                    <ImageCarousel mainImageUrl={image.summary.imageURL} images={image.summary.images} />  
+                    <ImageCarousel mainImageUrl={restaurant.summary.imageURL} images={restaurant.summary.images} />  
                   </ImageContainer>
                 </Col>
                 <Col xl={11} lg={11} md={24} sm={24} xs={24}>
                   <InfoContainer>
                     <InfoTitle>
-                      <span>{image.summary.name}</span>
-                      <span>{image.summary.category}</span>
+                      <span>{restaurant.summary.name}</span>
+                      <span>{restaurant.summary.category}</span>
                     </InfoTitle>
-                    <h3>{image.summary.fullRoadAddress} ({image.summary.addressAbbr}) </h3>
+                    <h3>{restaurant.summary.fullRoadAddress} ({restaurant.summary.addressAbbr}) </h3>
                     <InfoBox>
-                      <Tel tel={image.summary.phone} />
-                      <Time times={image.summary.bizHour} />
-                      <Menu menus={image.summary.menus} menuImages={image.summary.menuImages} setImageMask={setImageMask} />
+                      <Tel tel={restaurant.summary.phone} />
+                      <Time times={restaurant.summary.bizHour} />
+                      <Menu menus={restaurant.summary.menus} menuImages={restaurant.summary.menuImages} setImageMask={setImageMask} />
                     </InfoBox>
                   </InfoContainer>
                 </Col>
