@@ -12,3 +12,15 @@ html, body {
   font-size: 11px;
   margin-left: 5px;
 }
+
+/* 이미지 캐러셀 커스텀 */
+.ant-carousel .slick-slider {
+  position: unset;
+}
+.ant-carousel .slick-dots {
+  height: 5px;
+}
+.ant-carousel .slick-dots li button {
+  height: 6px;
+  border-radius: 3px;
+}

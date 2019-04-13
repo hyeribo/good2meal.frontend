@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col, Icon, Tag} from 'antd';
+import { Row, Col, Icon, Tag, Carousel } from 'antd';
 
 import imageModel from '@models/imageModel';
 
 
-
+const ImageCarousel = ({mainImageUrl, images}) => (
+  <Carousel effect="fade" autoplay>
+    <Img src={mainImageUrl} />
+    {
+      images.map((img, i) => {
+        if(mainImageUrl !== img.url) return (<Img key={i} src={img.url} />)
+      })
+    }
+  </Carousel>
+)
 const Time = ({times}) => (
   <Info>
     <InfoIcon><Icon type="clock-circle" /></InfoIcon>
@@ -48,7 +57,7 @@ const Detail = withRouter(({ match, history }) => {
     id: null,
     recommendedPlace: [],   // 주변 장소
     review: {},             // 리뷰
-    summary: {},            // 장소 설명
+    summary: { images: [] },            // 장소 설명
     transit: {},            // 교통
   });
 
@@ -88,7 +97,9 @@ const Detail = withRouter(({ match, history }) => {
             <CardContent>
               <Row>
                 <Col xl={13} lg={13} md={24} sm={24} xs={24}>
-                  <Img src={image.summary.imageURL} />  
+                  <ImageContainer>
+                    <ImageCarousel mainImageUrl={image.summary.imageURL} images={image.summary.images} />  
+                  </ImageContainer>
                 </Col>
                 <Col xl={11} lg={11} md={24} sm={24} xs={24}>
                   <InfoContainer>
@@ -98,7 +109,6 @@ const Detail = withRouter(({ match, history }) => {
                     </InfoTitle>
                     <h3>{image.summary.fullRoadAddress} ({image.summary.addressAbbr}) </h3>
                     <InfoBox>
-                      {/* <Info><Icon type="phone" /> {image.summary.phone}</Info> */}
                       {/* 연락처 */}
                       <Info>
                         <InfoIcon><Icon type="phone" /></InfoIcon>
@@ -114,9 +124,7 @@ const Detail = withRouter(({ match, history }) => {
                         image.summary.menus?.length
                         ? <Menu menus={image.summary.menus} /> : null
                       }
-                      
                     </InfoBox>
-                    {/* <Address>{image.summary.fullRoadAddress}</Address> */}
                   </InfoContainer>
                 </Col>
               </Row>
@@ -157,9 +165,19 @@ const CardContent = styled.div`
   padding-top: 0px;
 `;
 // 식당 사진
-const Img = styled.img`
+const ImageContainer = styled.div`
+  position: relative;
   width: 100%;
+  max-height: 400px;
+  overflow: hidden;
   border-radius: 8px;
+  background: #364d79;
+  text-align: center;
+`;
+const Img = styled.img`
+  height: 400px;
+  width: auto !important;
+  /* border-radius: 8px; */
 `;
 // 식당 정보
 const InfoContainer = styled.div`
@@ -175,7 +193,7 @@ const InfoTitle = styled.div`
   }
   span:last-child {
     font-weight: bold;
-    color: #666666;
+    color: #777;
     margin-left: 10px;
   }
 `;
