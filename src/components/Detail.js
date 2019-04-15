@@ -3,10 +3,11 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Icon, Tag, Carousel } from 'antd';
 
-import imageModel from '@models/imageModel';
 import ImageMask from '@components/ImageMask';
 import Button from '@components/Button';
 
+import imageModel from '@models/imageModel';
+import Star from '@utils/star';
 
 const ImageCarousel = ({mainImageUrl, images}) => (
   <Carousel effect="fade" autoplay>
@@ -68,15 +69,15 @@ const Menu = ({menus, menuImageExist, setImageMaskVisible }) => {
     </Info>
   );
 };
-const StarButton = ({starred, setStarred}) => {
+const StarButton = ({starred, onClick}) => {
   return (
-    <Button size='large' onClick={() => setStarred(!starred)}><Icon type="star" theme={starred ? 'filled' : 'outlined'} /><span>관심식당</span></Button>
+    <Button size='large' onClick={onClick}><Icon type="star" theme={starred ? 'filled' : 'outlined'} /><span>관심식당</span></Button>
   );
 };
 
 const Detail = withRouter(({ match, history }) => {
   const { id } = match.params;
-  const [ starred, setStarred ] = useState(false);
+  const [ starred, setStarred ] = useState(() => Star.isStarred(id));
   const [ restaurant, setRestaurant ] = useState({
     id: null,
     recommendedPlace: [],   // 주변 장소
@@ -110,6 +111,12 @@ const Detail = withRouter(({ match, history }) => {
     history.goBack();
   }
 
+  const toggleStar = () => {
+    if(starred) Star.removeStar(id);
+    else Star.addStar(id);
+    setStarred(!starred);
+  }
+
   return (
     <Container>
       <Row>
@@ -119,7 +126,7 @@ const Detail = withRouter(({ match, history }) => {
         <Col xl={18} lg={20} md={22} sm={24} xs={24}>
           <Card>
             <CardHeader>
-              <StarButton starred={starred} setStarred={setStarred} />
+              <StarButton onClick={toggleStar} starred={starred} />
             </CardHeader>
             <CardContent>
               <Row>
