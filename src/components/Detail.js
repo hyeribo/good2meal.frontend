@@ -184,6 +184,7 @@ const CardContent = styled.div`
   height: calc(100% - 68px);
   padding: 20px;
   padding-top: 0px;
+  padding-bottom: 60px;
 `;
 // 식당 사진
 const ImageContainer = styled.div`
