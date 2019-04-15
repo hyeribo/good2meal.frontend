@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const getImages = async (params, lastEvaluatedKey = null) => {
+const getImages = async (params) => {
   try {
     const url = process.env.API_ADDRESS + '/restaurants';
     const result = await axios.get(url, { params });

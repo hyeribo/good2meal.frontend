@@ -10,57 +10,77 @@ const masonryOptions = {
   transitionDuration: 0
 };
 
+const getRandomHeight = () => {
+  // 0 ~ 9
+  const randomDiff = Math.floor((Math.random() * 10));
+  // 120 ~ 320
+  const randomHeight = 320 + ( randomDiff % 2 ? randomDiff : randomDiff * -1 ) * 10;
+  return randomHeight;
+}
+
+const Cards = ({ images }) => {
+  const cards = images.map(({summary}, i) => (
+    <Card key={summary.id} lg={4} md={6} sm={8} xs={12}>
+      {
+        summary.imageURL
+        ? <Link to={`/detail/${summary.id}`}><Thumb src={summary.thumbnailURL} onError={(e)=> { return; }} /></Link>
+        : null
+      }
+    </Card>
+  ));
+  return cards;
+}
 
 const Board = withRouter(({ match }) => {
   const { search } = match.params;
-  const [ images, setImages ] = useState([]);
-  let lastEvaluatedKey = null;
+  const [ state, setState ] = useState({
+    images: [],
+    lastEvaluatedKey: null,
+  });
 
   useEffect(() => {
-    addImages();
+    loadMoreImages();
   }, []);
 
-  const addImages = async (lastEvaluatedKey) => {
+  // infinite scroll 구현
+  window.onscroll = () => {
+    const documentHeight = document.body.scrollHeight;  // 문서 전체의 높이
+    const innerHeight = window.innerHeight;             // 보여지는 문서의 높이
+    const scrollY = window.scrollY;                     // 스크롤의 위치
+    // 화면의 맨 아래에 도달했을때
+    if(documentHeight === innerHeight + scrollY) {
+      console.log('lastEvaluatedKey', state.lastEvaluatedKey);
+      // 추가 데이터가 있을때만
+      if(state.lastEvaluatedKey) {
+        loadMoreImages();
+      }
+    }
+  }
+  
+  const loadMoreImages = async () => {
     try {
       // 이미지 리스트 request
-      const result = await imageModel.getImages({ location: '구로디지털단지' }, lastEvaluatedKey);
-      lastEvaluatedKey = result.lastEvaluatedKey.id;
-      // console.log('result', result);
-      // 데이터 가공해서 기존 리스트에 concat
-      const additionalImageItems = getImageItems(result.result);
-      setImages(images.concat(additionalImageItems)); 
+      const response = await imageModel.getImages({ location: '구로디지털단지', last: state.lastEvaluatedKey });
+      const { result, lastEvaluatedKey } = response;
+      
+      // 각 데이터에 thumbnailURL 추가
+      result.forEach(re => {
+        if(re.summary.imageURL) {
+          const size = `200x${getRandomHeight()}`;
+          re.summary.thumbnailURL = `https://search.pstatic.net/common/?src=${re.summary.imageURL}&type=f&size=${size}`;
+        }
+      });
+
+      // state 업데이트
+      setState({
+        images: [...state.images, ...result],
+        lastEvaluatedKey: lastEvaluatedKey.id,
+      });
 
     } catch (error) {
       console.log(error);
     }
   }
-
-  const getImageItems = (images) => {
-    const imageItems = images.map(({summary}, i) => {
-      const size = `200x${getRandomHeight()}`;
-      if(summary.imageURL) summary.thumbnailURL = `https://search.pstatic.net/common/?src=${summary.imageURL}&type=f&size=${size}`;
-      return (
-        <Card key={summary.id} lg={4} md={6} sm={8} xs={12}>
-          {
-            summary.imageURL
-            ? <Link to={`/detail/${summary.id}`}><Thumb src={summary.thumbnailURL} onError={(e)=> { return; }} /></Link>
-            : null
-            // : <Link to={`/detail/${summary.id}`}><Thumb src={require('../assets/images/no_image.png')} /></Link>
-          }
-        </Card>
-      );
-    })
-    return imageItems;
-  }
-
-  const getRandomHeight = () => {
-    // 0 ~ 9
-    const randomDiff = Math.floor((Math.random() * 10));
-    // 120 ~ 320
-    const randomHeight = 320 + ( randomDiff % 2 ? randomDiff : randomDiff * -1 ) * 10;
-    return randomHeight;
-  }
-
 
 
   return (
@@ -73,7 +93,7 @@ const Board = withRouter(({ match }) => {
             disableImagesLoaded={false} // default false
             updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
           >
-            {images}
+            <Cards images={state.images} />
           </StyledMasonry>
         </Col>
         <Col xl={2} lg={1} md={1} sm={1} xs={0}></Col>
