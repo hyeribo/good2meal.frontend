@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import { withRouter, matchPath } from 'react-router-dom';
 import { Row, Col, Input } from 'antd';
 import styled from 'styled-components';
@@ -54,7 +54,7 @@ const HeaderLayout = withRouter(({ location, history }) => {
         </Col>
         <Col lg={18} sm={12} xs={15}>
           <Search
-            placeholder="input search text"
+            placeholder='검색'
             onSearch={value => handleSearch(value)}
             value={value}
             onChange={(e) => setValue(e.target.value)}
