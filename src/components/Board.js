@@ -86,8 +86,8 @@ const Board = withRouter(({ match }) => {
   return (
     <Container>
       <Row>
-        <Col xl={2} lg={1} md={1} sm={1} xs={0}></Col>
-        <Col xl={20} lg={22} md={22} sm={22} xs={24}>
+        <Col xl={1} lg={1} md={1} sm={1} xs={0}></Col>
+        <Col xl={22} lg={22} md={22} sm={22} xs={24}>
           <StyledMasonry
             options={masonryOptions} // default {}
             disableImagesLoaded={false} // default false
@@ -96,7 +96,7 @@ const Board = withRouter(({ match }) => {
             <Cards images={state.images} />
           </StyledMasonry>
         </Col>
-        <Col xl={2} lg={1} md={1} sm={1} xs={0}></Col>
+        <Col xl={1} lg={1} md={1} sm={1} xs={0}></Col>
       </Row>
     </Container>
   )
