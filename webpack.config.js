@@ -33,13 +33,14 @@ module.exports = env => ({
       "@assets": path.resolve('src/assets'),
       "@layouts": path.resolve('src/layouts'),
       "@components": path.resolve('src/components'),
-      "@models": path.resolve('src/models')
+      "@models": path.resolve('src/models'),
+      "@utils": path.resolve('src/utils')
     }
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env.mode),
-      'process.env.API_ADDRESS': JSON.stringify('http://fd8e45df.ngrok.io')
+      'process.env.API_ADDRESS': JSON.stringify('https://api.good2meal.com')
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
