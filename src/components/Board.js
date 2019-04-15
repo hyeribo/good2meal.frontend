@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
+import { Row, Col, Spin } from 'antd';
 import Masonry from 'react-masonry-component';
 
 import imageModel from '@models/imageModel';
@@ -37,6 +37,7 @@ const Board = withRouter(({ match }) => {
     images: [],
     lastEvaluatedKey: null,
   });
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     loadMoreImages();
@@ -47,11 +48,14 @@ const Board = withRouter(({ match }) => {
     const documentHeight = document.body.scrollHeight;  // 문서 전체의 높이
     const innerHeight = window.innerHeight;             // 보여지는 문서의 높이
     const scrollY = window.scrollY;                     // 스크롤의 위치
-    // 화면의 맨 아래에 도달했을때
-    if(documentHeight === innerHeight + scrollY) {
-      console.log('lastEvaluatedKey', state.lastEvaluatedKey);
-      // 추가 데이터가 있을때만
-      if(state.lastEvaluatedKey) {
+    const scrollStartHeight = innerHeight * 0.25         // 문서의 3/4 위치에서 스크롤 시작
+    
+    // 스크롤 지점에 도달했을때
+    if(documentHeight - scrollStartHeight < innerHeight + scrollY) {
+      // 추가 데이터가 있고, 로딩중이 아닐때만
+      if(state.lastEvaluatedKey && !loading) {
+        console.log('lastEvaluatedKey', state.lastEvaluatedKey);
+        setLoading(true);
         loadMoreImages();
       }
     }
@@ -62,6 +66,7 @@ const Board = withRouter(({ match }) => {
       // 이미지 리스트 request
       const response = await imageModel.getImages({ location: '구로디지털단지', last: state.lastEvaluatedKey });
       const { result, lastEvaluatedKey } = response;
+      setLoading(false);
       
       // 각 데이터에 thumbnailURL 추가
       result.forEach(re => {
@@ -98,6 +103,7 @@ const Board = withRouter(({ match }) => {
         </Col>
         <Col xl={1} lg={1} md={1} sm={1} xs={0}></Col>
       </Row>
+      { loading ? <Loading><Spin tip="Loading..."/></Loading> : null }
     </Container>
   )
 });
@@ -116,6 +122,12 @@ const Card = styled(Col)`
 const Thumb = styled.img`
   width: 100%;
   border-radius: 5px;
+`;
+const Loading = styled.div`
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
 `;
 
 export default Board;
