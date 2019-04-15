@@ -11,9 +11,7 @@ const MainLayout = () => {
   return (
     <Container>
       {/* 헤더 - 검색어 입력. 모든 페이지에 포함됨 */}
-      <HeaderContainer>
-        <Header />
-      </HeaderContainer>
+      <Header />
 
       {/* 바디 - 검색 결과 화면 */}
       <BodyContainer>
@@ -33,16 +31,12 @@ const MainLayout = () => {
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-`;
-const HeaderContainer = styled.div`
-  width: 100%;
-  height: 60px;
-  line-height: 60px;
+  display: flex;
+  flex-direction: column;
 `;
 const BodyContainer = styled.div`
   width: 100%;
-  height: calc(100% - 60px);
-  overflow-y: scroll;
+  flex: 1;
 `
 
 export default MainLayout;

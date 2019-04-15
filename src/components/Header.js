@@ -2,8 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { withRouter, matchPath } from 'react-router-dom';
 import { Row, Col, Input } from 'antd';
 import styled from 'styled-components';
-
 const Search = Input.Search;
+
+import Tags from './Tags';
+
 
 const HeaderLayout = withRouter(({ location, history }) => {
   console.log('========== Header ==========')
@@ -36,35 +38,50 @@ const HeaderLayout = withRouter(({ location, history }) => {
   
 
   return (
-    <Row style={{ textAlign: 'center' }}>
-      <Col lg={3} sm={6} xs={0}>
-        <Logo
-          src={require(`../assets/logo.png`)}
-          onClick={() => goHome()}
-        />
-      </Col>
-      <Col lg={0} sm={0} xs={3}>
-        <Icon
-          src={require(`../assets/favicon.png`)}
-          onClick={() => goHome()}
-        />
-      </Col>
-      <Col lg={18} sm={12} xs={15}>
-        <Search
-          placeholder="input search text"
-          onSearch={value => handleSearch(value)}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          style={{ height: 40 }}
-        />
-      </Col>
-      <Col lg={3} sm={6} xs={6}>
-        유저정보
-      </Col>
-    </Row>
+    <Container>
+      <SearchField>
+        <Col lg={3} sm={6} xs={0}>
+          <Logo
+            src={require(`../assets/logo.png`)}
+            onClick={() => goHome()}
+          />
+        </Col>
+        <Col lg={0} sm={0} xs={3}>
+          <Icon
+            src={require(`../assets/favicon.png`)}
+            onClick={() => goHome()}
+          />
+        </Col>
+        <Col lg={18} sm={12} xs={15}>
+          <Search
+            placeholder="input search text"
+            onSearch={value => handleSearch(value)}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            style={{ height: 40 }}
+          />
+        </Col>
+        <Col lg={3} sm={6} xs={6}>
+          유저정보
+        </Col>
+      </SearchField>
+      { value ? <Tags/> : null}
+    </Container>
   )
 })
 
+const Container = styled.div`
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+`;
+const SearchField = styled(Row)`
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+`;
 const Logo = styled.img`
   width: 100%;
   padding: 10px 20px;

@@ -4,29 +4,12 @@ import styled from 'styled-components';
 import { Row, Col } from 'antd';
 import Masonry from 'react-masonry-component';
 
-import RandomButton from './RandomButton';
-
 import imageModel from '@models/imageModel';
 
 const masonryOptions = {
   transitionDuration: 0
 };
 
-const TagField = (props) => {
-  const tags = ['this', 'is', 'test', 'tag'];
-
-  return (
-    <Sticky>
-      <div>
-        <Col xl={12} lg={12} md={12} sm={12} xs={12}>
-          {
-            tags.map((tag, i) => <RandomButton key={i} text={tag} />)
-          }
-        </Col>
-      </div>
-    </Sticky>
-  )
-}
 
 const Board = withRouter(({ match }) => {
   const { search } = match.params;
@@ -82,7 +65,6 @@ const Board = withRouter(({ match }) => {
 
   return (
     <Container>
-      { search ? (<TagField/>) : null}
       <Row>
         <Col xl={2} lg={1} md={1} sm={1} xs={0}></Col>
         <Col xl={20} lg={22} md={22} sm={22} xs={24}>
@@ -107,20 +89,10 @@ const StyledMasonry = styled(Masonry)`
 const Container = styled.div`
   width: 100%;
   padding: 0 20px;
-
 `;
 const Card = styled(Col)`
   padding: 10px;
 `;
-const Sticky = styled(Row)`
-  height: 60px;
-  line-height: 60px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  padding: 0 20px;
-  background-color: white;
-`
 const Thumb = styled.img`
   width: 100%;
   border-radius: 5px;
