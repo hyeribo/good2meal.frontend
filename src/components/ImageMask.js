@@ -43,6 +43,7 @@ const Container = styled.div`
   padding-top: 130px;
   padding-bottom: 30px;
   color: white;
+  z-index: 3;
 `;
 const CloseIcon = styled(Icon)`
   position: absolute;
