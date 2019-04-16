@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Row, Col, Spin } from 'antd';
 import Masonry from 'react-masonry-component';
 
+import Card from '@components/Card';
 import imageModel from '@models/imageModel';
 
 const masonryOptions = {
@@ -20,13 +21,7 @@ const getRandomHeight = () => {
 
 const Cards = ({ images }) => {
   const cards = images.map(({summary}, i) => (
-    <Card key={summary.id} lg={4} md={6} sm={8} xs={12}>
-      {
-        summary.imageURL
-        ? <Link to={`/detail/${summary.id}`}><Thumb src={summary.thumbnailURL} onError={(e)=> { return; }} /></Link>
-        : null
-      }
-    </Card>
+    <Card key={i} name={summary.name} url={summary.thumbnailURL || ''} to={`/detail/${summary.id}`} />
   ));
   return cards;
 }
@@ -115,13 +110,6 @@ const StyledMasonry = styled(Masonry)`
 const Container = styled.div`
   width: 100%;
   padding: 0 20px;
-`;
-const Card = styled(Col)`
-  padding: 10px;
-`;
-const Thumb = styled.img`
-  width: 100%;
-  border-radius: 5px;
 `;
 const Loading = styled.div`
   width: 100%;
