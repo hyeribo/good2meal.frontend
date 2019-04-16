@@ -197,11 +197,11 @@ const CardContent = styled.div`
 const ImageContainer = styled.div`
   position: relative;
   width: 100%;
+  z-index: 1;
   max-height: 400px;
   overflow: hidden;
   border-radius: 8px;
   text-align: center;
-  /* background: #364d79; */
 `;
 const Img = styled.img`
   height: 400px;
