@@ -51,8 +51,13 @@ const Img = styled.img`
 `;
 const Name = styled.span`
   position: relative;
-  top: calc(50% - 10px);
+  top: calc(50% - 20px);
   font-size: 20px;
   font-weight: bold;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
 `;
 export default Card;
