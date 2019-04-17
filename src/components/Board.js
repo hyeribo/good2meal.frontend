@@ -21,7 +21,7 @@ const getRandomHeight = () => {
 
 const Cards = ({ images }) => {
   const cards = images.map(({summary}, i) => (
-    <Card key={i} name={summary.name} url={summary.thumbnailURL || ''} to={`/detail/${summary.id}`} />
+    <Card key={i} name={summary.name} url={summary.thumbnailURL || ''} id={summary.id || ''} to={`/detail/${summary.id}`} />
   ));
   return cards;
 }

@@ -71,7 +71,7 @@ const Menu = ({menus, menuImageExist, setImageMaskVisible }) => {
 };
 const StarButton = ({starred, onClick}) => {
   return (
-    <Button size='large' onClick={onClick}><Icon type="star" theme={starred ? 'filled' : 'outlined'} /><span>관심식당</span></Button>
+    <Button size='large' color='green' outlined onClick={onClick}><Icon type="star" theme={starred ? 'filled' : 'outlined'} /><span>관심식당</span></Button>
   );
 };
 
