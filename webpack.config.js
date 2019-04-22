@@ -40,7 +40,8 @@ module.exports = env => ({
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env.mode),
-      'process.env.API_ADDRESS': JSON.stringify('https://api.good2meal.com')
+      'process.env.API_ADDRESS': JSON.stringify('https://api.good2meal.com'),
+      'process.env.DEV_ADDRESS': JSON.stringify('http://localhost:3000')
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
