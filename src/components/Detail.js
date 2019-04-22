@@ -11,10 +11,10 @@ import Star from '@utils/star';
 
 const ImageCarousel = ({mainImageUrl, images}) => (
   <Carousel effect="fade" autoplay>
-    <Img src={mainImageUrl} />
+    <Img src={`https://search.pstatic.net/common/?src=${mainImageUrl}&type=f&size=400x400`} />
     {
       images.map((img, i) => {
-        if(mainImageUrl !== img.url) return (<Img key={i} src={img.url} />)
+        if(mainImageUrl !== img.url) return (<Img key={i} src={`https://search.pstatic.net/common/?src=${img.url}&type=f&size=700x700`} />)
       })
     }
   </Carousel>
