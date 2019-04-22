@@ -6,11 +6,16 @@ const randomRgb = () => {
   return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ', 0.5)';
 }
 
-const RandomButton = (props) => {
+const TagButton = (props) => {
   const backgroundColor = randomRgb();
   const { text } = props;
+  const tag = text.split(',');
   return (
-    <Button backgroundColor={backgroundColor}>{ text.charAt(0).toUpperCase() + text.slice(1) }</Button>
+    <Button 
+    onClick={(e)=>{console.log(1)}}
+    backgroundColor={backgroundColor}
+    >{ `${tag[1]} ${tag[2] ? tag[2] : ''} ${tag[3] ? tag[3] : ''}` }
+    </Button>
   )
 }
 
@@ -26,4 +31,4 @@ const Button = styled.button`
   border: 0px solid black;
 `;
 
-export default RandomButton;
+export default TagButton;
