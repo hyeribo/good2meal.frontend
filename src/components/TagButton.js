@@ -14,7 +14,8 @@ const TagButton = (props) => {
     <Button 
     onClick={(e)=>{console.log(1)}}
     backgroundColor={backgroundColor}
-    >{ `${tag[1]} ${tag[2] ? tag[2] : ''} ${tag[3] ? tag[3] : ''}` }
+    >
+    { `${tag[1]} ${tag[2] || ''} ${tag[3] || ''}` }
     </Button>
   )
 }
